@@ -228,3 +228,21 @@ export const toggleDisikeAnalyze = asyncHandler(
   }
 );
 
+export const incrementAnalyzeViews = asyncHandler(
+  async (req: CustomRequest, res: Response) => {
+    try {
+      const { postIdPublic } = req.body;
+      const analyze = await Analysis.findById(postIdPublic);
+      if (analyze) {
+        analyze.numViews += 1;
+        await analyze.save();
+        res.json({ _id: postIdPublic, analyze: analyze, message: "Views incremented successfully" });
+      } else {
+        throw new Error("Post not found");
+      }
+    } catch (error) {
+      res.json({ error: "Error incrementing post views" });
+    }
+  }
+);
+

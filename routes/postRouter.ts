@@ -5,6 +5,7 @@ import {
   deletePost,
   editPost,
   getAllPosts,
+  incrementPostViews,
   toggleDisikePost,
   toggleLikePost,
 } from "../controllers/postController";
@@ -18,6 +19,10 @@ const router = express.Router();
 //like and dislike
 router.put("/api/v1/posts/likes",verifyToken,toggleLikePost)
 router.put("/api/v1/posts/dislikes",verifyToken,toggleDisikePost)
+
+
+router.put("/api/v1/posts/incrementViews",verifyToken,incrementPostViews)
+
 
 router.post(
   "/api/v1/posts/create",

@@ -5,6 +5,7 @@ import {
   deleteAnalyze,
   editAnalyze,
   getAllAnalysis,
+  incrementAnalyzeViews,
   toggleDisikeAnalyze,
   toggleLikeAnalyze,
 } from "../controllers/analizeController";
@@ -18,6 +19,8 @@ const router = express.Router();
 //like and dislike
 router.put("/api/v1/analyze/likes",verifyToken,toggleLikeAnalyze)
 router.put("/api/v1/analyze/dislikes",verifyToken,toggleDisikeAnalyze)
+
+router.put("/api/v1/analyze/incrementViews", verifyToken, incrementAnalyzeViews);
 
 router.post(
   "/api/v1/analyze/create",

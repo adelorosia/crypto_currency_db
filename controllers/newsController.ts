@@ -223,3 +223,21 @@ export const toggleDisikeNews = asyncHandler(
     }
   }
 );
+
+export const incrementNewsViews = asyncHandler(
+  async (req: CustomRequest, res: Response) => {
+    try {
+      const { postIdPublic } = req.body;
+      const news = await News.findById(postIdPublic);
+      if (news) {
+        news.numViews += 1;
+        await news.save();
+        res.json({ _id: postIdPublic, news: news, message: "Views incremented successfully" });
+      } else {
+        throw new Error("Post not found");
+      }
+    } catch (error) {
+      res.json({ error: "Error incrementing post views" });
+    }
+  }
+);

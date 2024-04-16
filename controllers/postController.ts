@@ -157,7 +157,7 @@ export const toggleLikePost = asyncHandler(
         _id: postIdPublic,
         post: post,
         message: "success",
-        isliked:false
+        isliked: false,
       });
     } else {
       const post = await Posts.findByIdAndUpdate(
@@ -173,7 +173,7 @@ export const toggleLikePost = asyncHandler(
         _id: postIdPublic,
         post: post,
         message: "success",
-        isLiked:true
+        isLiked: true,
       });
     }
   }
@@ -214,7 +214,7 @@ export const toggleDisikePost = asyncHandler(
         _id: postIdPublic,
         post: post,
         message: "success",
-        isDisliked:false
+        isDisliked: false,
       });
     } else {
       const post = await Posts.findByIdAndUpdate(
@@ -230,8 +230,26 @@ export const toggleDisikePost = asyncHandler(
         _id: postIdPublic,
         post: post,
         message: "success",
-        isDisliked:true
+        isDisliked: true,
       });
+    }
+  }
+);
+
+export const incrementPostViews = asyncHandler(
+  async (req: CustomRequest, res: Response) => {
+    try {
+      const { postIdPublic } = req.body;
+      const post = await Posts.findById(postIdPublic);
+      if (post) {
+        post.numViews += 1;
+        await post.save();
+        res.json({ _id: postIdPublic, post: post, message: "Views incremented successfully" });
+      } else {
+        throw new Error("Post not found");
+      }
+    } catch (error) {
+      res.json({ error: "Error incrementing post views" });
     }
   }
 );
