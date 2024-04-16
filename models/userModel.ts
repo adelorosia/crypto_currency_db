@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema<IUser>(
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "user",
+          ref: "User",
         },
       ],
     },
@@ -64,7 +64,7 @@ const userSchema = new mongoose.Schema<IUser>(
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "user",
+          ref: "User",
         },
       ],
     },
@@ -72,7 +72,7 @@ const userSchema = new mongoose.Schema<IUser>(
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "user",
+          ref: "User",
         },
       ],
     },

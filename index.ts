@@ -9,7 +9,7 @@ import coinRouter from "./routes/coinRouter";
 import postRouter from "./routes/postRouter";
 import newsRouter from "./routes/newsRouter";
 import analyzeRouter from "./routes/analyzeRouter";
-
+import commentRouter from "./routes/commentRouter";
 
 dotenv.config();
 dbConnect();
@@ -17,7 +17,7 @@ dbConnect();
 const app = express();
 //adel
 app.use(express.json());
-app.use(cors({ credentials: true, origin: "https://orosia.online" }));
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(cookieParser());
 
 app.use(userRouter);
@@ -25,7 +25,7 @@ app.use(coinRouter);
 app.use(postRouter);
 app.use(newsRouter);
 app.use(analyzeRouter);
-
+app.use(commentRouter);
 
 app.use(notFound);
 app.use(errorHandler);
