@@ -11,7 +11,7 @@ interface CustomRequest extends Request {
 export const getComments = asyncHandler(async (req, res) => {
   try {
     const comments = await Comments.find({}).populate("user");
-    res.json({ comment: comments });
+    res.json(comments);
   } catch (error) {
     res.json(error);
   }
