@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import { IPost } from "../interface";
 import { Request, Response } from "express";
 import Comments from "../models/commentModel";
+import { populate } from "dotenv";
 
 interface CustomRequest extends Request {
   userId?: IPost;
@@ -10,7 +11,7 @@ interface CustomRequest extends Request {
 
 export const getComments = asyncHandler(async (req, res) => {
   try {
-    const comments = await Comments.find({}).populate("user");
+    const comments = await Comments.find().populate("user");
     res.json(comments);
   } catch (error) {
     res.json(error);
@@ -39,6 +40,7 @@ export const createComment = asyncHandler(
         comment,
         user: userId,
       });
+      await comments.populate("user")
       res.json({
         comment: comments,
         message: "Your comment has been successfully registered.",
