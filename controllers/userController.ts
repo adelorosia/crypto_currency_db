@@ -129,6 +129,7 @@ export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
 export const verifyUserEmail = asyncHandler(
   async (req: CustomRequest, res: Response) => {
     const loginUserId = req.userId;
+    console.log("loginUserId: ",loginUserId)
     const user = await Users.findById(loginUserId);
     if (!user) throw new Error("");
 
@@ -141,9 +142,9 @@ export const verifyUserEmail = asyncHandler(
 
 export const accountVerification = asyncHandler(async (req, res) => {
   const { token } = req.body;
-  console.log("token", typeof token);
+  console.log("token",  token);
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-  console.log(hashedToken);
+  console.log("hashedToken: ",hashedToken);
   const userFound = await Users.findOne({
     accountVerificationToken: hashedToken,
     accountVerificationTokenExpires: { $gt: new Date() },
