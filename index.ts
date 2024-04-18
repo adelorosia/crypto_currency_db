@@ -10,6 +10,7 @@ import postRouter from "./routes/postRouter";
 import newsRouter from "./routes/newsRouter";
 import analyzeRouter from "./routes/analyzeRouter";
 import commentRouter from "./routes/commentRouter";
+import quizRouter from "./routes/quizRouter";
 
 dotenv.config();
 dbConnect();
@@ -26,6 +27,7 @@ app.use(postRouter);
 app.use(newsRouter);
 app.use(analyzeRouter);
 app.use(commentRouter);
+app.use(quizRouter);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -76,6 +76,7 @@ export const editComment = asyncHandler(
         }, {
           new: true,
         });
+        await comments.populate("user");
         res.json({
           _id: commentIdPublic,
           comment: comments,

@@ -31,7 +31,13 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Boolean,
       default: false,
     },
-    score: {
+    correctAnswers: {
+      type: Number,
+    },
+    IncorrectAnswers: {
+      type: Number,
+    },
+    totalScore: {
       type: Number,
     },
     isBlocked: {

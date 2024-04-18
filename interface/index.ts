@@ -8,7 +8,9 @@ export interface IUser {
   bio: string;
   profile_photo: string;
   canAnalyze: boolean;
-  score: number;
+  correctAnswers:number;
+  IncorrectAnswers:number;
+  totalScore: number;
   isBlocked: boolean;
   isAdmin: boolean;
   isFollowing: boolean;
@@ -73,4 +75,14 @@ export interface IPost {
   user: string;
   image: string;
   updatedAt: string;
+
+}
+
+export interface IQuestion {
+  _id: string;
+  type: "trueFalse" | "singlecorrect_answers" | "multiplecorrect_answers";
+  question: string;
+  choices: string;
+  correct_answers: string;
+  score: number;
 }
