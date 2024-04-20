@@ -28,13 +28,13 @@ export const sendVerificationLinkToEmail = async (
           <div style="text-align: center; margin-bottom: 20px;">
             <img src="https://orosia.online/src/assets/images/logo.png" alt="brand" width="120" height="120"/>
           </div>
-          <p style="font-size: 24px; font-weight: bold; color: #FFD700;">Dear ${firstName},</p>
-          <p style="font-size: 24px; font-weight: bold; color: #FFD700;">Thank you for signing up. Please click the following link to verify your account:</p>
-          <div style="background-color: #007bff; padding: 7px; border-radius: 5px; text-align: center;">
+          <p style="font-size: 24px; font-weight: bold; color: #eab308;">Dear ${firstName},</p>
+          <p style="font-size: 24px; font-weight: bold; color: #eab308;">Thank you for signing up. Please click the following link to verify your account:</p>
+          <div style="background-color: #007bff; padding: 1px; border-radius: 5px; text-align: center;">
             <p style="font-size: 36px; font-weight: bold; color: #ffffff;">${verificationCode}</p>
           </div>
-          <p style="color: #FFD700;">If you did not sign up, please ignore this email.</p>
-          <p style="color: #FFD700;">Best Regards,<br/>orosia.online Team</p>
+          <p style="color: #eab308;">If you did not sign up, please ignore this email.</p>
+          <p style="color: #eab308;">Best Regards,<br/>orosia.online Team</p>
         </div>
       </div>
     `,

@@ -6,7 +6,6 @@ import { IUser } from "../interface/index";
 import { Request, Response } from "express";
 import { sendVerificationLinkToEmail } from "./email/sendEmail";
 import { cloudinaryUploadImage } from "../utils/cloudinary";
-import crypto from "crypto";
 import fs from "fs";
 
 interface CustomRequest extends Request {
