@@ -33,12 +33,15 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     correctAnswers: {
       type: Number,
+      default:0
     },
-    IncorrectAnswers: {
+    incorrectAnswers: {
       type: Number,
+      default:0
     },
     totalScore: {
       type: Number,
+      default:0
     },
     isBlocked: {
       type: Boolean,
@@ -85,6 +88,9 @@ const userSchema = new mongoose.Schema<IUser>(
     access_token: {
       type: String,
     },
+    verificationCode:{
+      type:String
+    }
   },
   {
     toJSON: {
@@ -127,15 +133,15 @@ userSchema.methods.isPasswordMatched = async function (
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-userSchema.methods.createAccountVerificationToken = async function () {
-  const verificationToken = crypto.randomBytes(32).toString("hex");
-  this.accountVerificationToken = crypto
-    .createHash("sha256")
-    .update(verificationToken)
-    .digest("hex");
-  this.accountVerificationTokenExpires = Date.now() + 30 * 60 * 1000;
-  return verificationToken;
-};
+// userSchema.methods.createAccountVerificationToken = async function () {
+//   const verificationToken = crypto.randomBytes(32).toString("hex");
+//   this.accountVerificationToken = crypto
+//     .createHash("sha256")
+//     .update(verificationToken)
+//     .digest("hex");
+//   this.accountVerificationTokenExpires = Date.now() + 30 * 60 * 1000;
+//   return verificationToken;
+// };
 
 const Users = mongoose.model("User", userSchema);
 export default Users;

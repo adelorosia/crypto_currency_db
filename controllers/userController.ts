@@ -9,11 +9,9 @@ import { cloudinaryUploadImage } from "../utils/cloudinary";
 import crypto from "crypto";
 import fs from "fs";
 
-
 interface CustomRequest extends Request {
   userId?: IUser;
 }
-
 
 // Register User
 export const registerUser = asyncHandler(
@@ -129,33 +127,51 @@ export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
 export const verifyUserEmail = asyncHandler(
   async (req: CustomRequest, res: Response) => {
     const loginUserId = req.userId;
-    console.log("loginUserId: ",loginUserId)
     const user = await Users.findById(loginUserId);
-    if (!user) throw new Error("");
+    if (!user) throw new Error("User not found");
+    // Throw an error if the user's account has already been verified
+    if (user.isAccountVerified) return;
 
-    const verificationToken = await user.createAccountVerificationToken();
+    const verificationCode = Math.floor(100000 + Math.random() * 900000);
+
+    user.verificationCode = verificationCode.toString();
     await user.save();
-    sendVerificationLinkToEmail(user.email, user.firstName, verificationToken);
-    res.json({ message: "email gesendet", verificationToken });
+    sendVerificationLinkToEmail(user.email, user.firstName, verificationCode);
+    res.json({
+      message:
+        "Your activation code has been sent to your email. If you do not receive the email within 15 minutes, please request it again.",
+      verificationCode,
+    });
   }
 );
 
-export const accountVerification = asyncHandler(async (req, res) => {
-  const { token } = req.body;
-  console.log("token",  token);
-  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-  console.log("hashedToken: ",hashedToken);
-  const userFound = await Users.findOne({
-    accountVerificationToken: hashedToken,
-    accountVerificationTokenExpires: { $gt: new Date() },
-  });
-  if (!userFound) throw new Error("no user");
-  userFound.isAccountVerified = true;
-  userFound.accountVerificationToken = undefined;
-  userFound.accountVerificationTokenExpires = undefined;
-  await userFound.save();
-  res.json({ message: "alles gut" });
-});
+export const accountVerification = asyncHandler(
+  async (req: CustomRequest, res: Response) => {
+    const loginUserId = req.userId;
+    const user = await Users.findById(loginUserId);
+
+    if (!user) throw new Error("no user");
+    try {
+      const { verificationCode } = req.body;
+      if (verificationCode === user.verificationCode) {
+        user.verificationCode = "";
+        user.isAccountVerified = true;
+
+        await user.save();
+
+        res.json({
+          _id: loginUserId,
+          user: user,
+          message: "Your account has been verified successfully.",
+        });
+      } else {
+        throw new Error("Code is not valid");
+      }
+    } catch (error) {
+      res.json(error);
+    }
+  }
+);
 
 // Get All Users
 export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
@@ -315,7 +331,7 @@ export const unFollowUser = asyncHandler(
 export const deleteAccount = asyncHandler(
   async (req: CustomRequest, res: Response) => {
     const loginUserId = req.userId;
-    const {targetUserId} = req.params;
+    const { targetUserId } = req.params;
 
     const loginUser = await Users.findById(loginUserId);
     if (loginUser.isAdmin || loginUserId.toString() === targetUserId) {
@@ -323,6 +339,33 @@ export const deleteAccount = asyncHandler(
       res.json({ message: "Account successfully deleted." });
     } else {
       throw new Error("You do not have permission to delete this account.");
+    }
+  }
+);
+
+export const examScoreRegistration = asyncHandler(
+  async (req: CustomRequest, res: Response) => {
+    const loginUserId = req.userId;
+
+    const loginUser = await Users.findById(loginUserId);
+    console.log("loginUser: ", loginUser);
+    if (loginUser) {
+      const { correctAnswers, incorrectAnswers, totalScore, canAnalyze } =
+        req.body;
+      console.log("req.body: ", req.body);
+      const user = await Users.findByIdAndUpdate(
+        { _id: loginUserId },
+        {
+          correctAnswers,
+          incorrectAnswers,
+          totalScore,
+          canAnalyze,
+        },
+        { new: true }
+      );
+      res.json({ message: "success", _id: loginUserId, user: user });
+    } else {
+      throw new Error("no User");
     }
   }
 );

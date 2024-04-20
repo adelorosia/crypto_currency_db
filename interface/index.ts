@@ -9,7 +9,7 @@ export interface IUser {
   profile_photo: string;
   canAnalyze: boolean;
   correctAnswers:number;
-  IncorrectAnswers:number;
+  incorrectAnswers:number;
   totalScore: number;
   isBlocked: boolean;
   isAdmin: boolean;
@@ -24,6 +24,7 @@ export interface IUser {
   createAccountVerificationToken: Function;
   accountVerificationToken: string;
   accountVerificationTokenExpires: Date;
+  verificationCode:string
 }
 
 export interface ICoin {

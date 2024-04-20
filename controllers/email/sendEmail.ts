@@ -1,35 +1,50 @@
 import nodemailer from "nodemailer";
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false,
   auth: {
-    user: 'adelnamazi61@gmail.com',
-    pass: process.env.PASSMAIL
+    user: "adelnamazi61@gmail.com",
+    pass: process.env.PASSMAIL,
   },
 });
 
 export const sendVerificationLinkToEmail = async (
   email: string,
   firstName: string,
-  verifyToken: string
+  verificationCode: number
 ) => {
-  let details = {
+  const mailOptions = {
     from: "adelnamazi61@gmail.com",
     to: email,
-    subject: "verify Account",
+    subject: "Verify Your Account",
     html: `
-    <img src="https://cdn-icons-png.flaticon.com/512/5309/5309779.png" alt="brand" width="30" height="30"/>
-      <p>Dear ${firstName}</p>
-      <p>Thank you for signing up. Please click the following link to verify your account:</p>
-      <a href="https://orosia.online/verify_account/${verifyToken}">Verify Account</a>
-      <p>If you did not sign up, please ignore this email.</p>
-      <p>Best Regards,<br/>Your Website Team</p>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
+        <div style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); background-color: #333333; padding: 20px; border-radius: 10px;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <img src="https://orosia.online/src/assets/images/logo.png" alt="brand" width="120" height="120"/>
+          </div>
+          <p style="font-size: 24px; font-weight: bold; color: #FFD700;">Dear ${firstName},</p>
+          <p style="font-size: 24px; font-weight: bold; color: #FFD700;">Thank you for signing up. Please click the following link to verify your account:</p>
+          <div style="background-color: #007bff; padding: 7px; border-radius: 5px; text-align: center;">
+            <p style="font-size: 36px; font-weight: bold; color: #ffffff;">${verificationCode}</p>
+          </div>
+          <p style="color: #FFD700;">If you did not sign up, please ignore this email.</p>
+          <p style="color: #FFD700;">Best Regards,<br/>orosia.online Team</p>
+        </div>
+      </div>
     `,
   };
-  await transporter.sendMail(details);
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log("Verification email sent successfully.");
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+    throw new Error("Failed to send verification email.");
+  }
 };

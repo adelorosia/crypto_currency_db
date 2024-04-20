@@ -13,6 +13,7 @@ import {
   followUser,
   unFollowUser,
   deleteAccount,
+  examScoreRegistration,
 } from "../controllers/userController";
 import { verifyToken } from "../middlewares/token/verifyToken";
 import { refreshToken } from "../controllers/refreshToken";
@@ -38,7 +39,7 @@ router.post(
   verifyToken,
   verifyUserEmail
 );
-router.put("/api/v1/verify-account", accountVerification);
+router.put("/api/v1/verify-account",verifyToken, accountVerification);
 router.delete("/api/v1/delete-account/:targetUserId", verifyToken, deleteAccount);
 
 router.get("/api/v1/users", getAllUsers);
@@ -58,5 +59,6 @@ router.put("/api/v1/users/change_password", verifyToken, changePassword);
 // Follow And unFollow
 router.post("/api/v1/users/follow", verifyToken, followUser);
 router.post("/api/v1/users/unfollow", verifyToken, unFollowUser);
+router.put("/api/v1/users/examScoreRegistration",verifyToken, examScoreRegistration);
 
 export default router;
