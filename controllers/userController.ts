@@ -210,6 +210,7 @@ export const accessTokenExpired = asyncHandler(
       if (!token) throw new Error("user ist nicht mehr loggin");
 
       const user = await Users.findOne({ access_token: token });
+      if(!user) throw new Error("user ist nicht mehr loggin");
       res.json({ user: user, message: "user is loggin" });
     } 
 
