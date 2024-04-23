@@ -94,8 +94,8 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      secure: true,
-      sameSite: "lax",
+      // secure: true,
+      // sameSite: "lax",
     });
 
     const decode = jwtDecode<IUser>(accessToken);
@@ -368,3 +368,75 @@ export const examScoreRegistration = asyncHandler(
     }
   }
 );
+
+//wenn Benutzer hat seine Password Vergessen muss zuerst seine email bestätigen
+export const confirmEmail = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { email } = req.body;
+    const user = await Users.findOne({ email });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (!user.email) {
+      throw new Error("User's email not found");
+    }
+    const verificationCode = Math.floor(100000 + Math.random() * 900000);
+
+    user.verificationCode = verificationCode.toString();
+    await user.save();
+    sendVerificationLinkToEmail(user.email, user.firstName, verificationCode);
+    res.json({
+      message:
+        "Your activation code has been sent to your email. If you do not receive the email within 15 minutes, please request it again.",
+      verificationCode,
+      email,
+    });
+  }
+);
+
+//CHANGE PASSWORD WENN USER IST LOGIN
+export const changePasswordWithotLogin = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { email, newPassword, confirmPassword } = req.body;
+    const user = await Users.findOne({email});
+    if (user) {
+      if (newPassword !== confirmPassword) {
+        throw new Error("Password and Confirm Password do not match.");
+      }
+      user.password = newPassword;
+      await user.save();
+      res.json({ message: "Your password has been successfully changed.",user:user });
+    } else {
+      throw new Error("user Not Found");
+    }
+  }
+);
+
+export const confirmVerificationCode = asyncHandler(
+  async (req: Request, res: Response) => {
+   const {email,verificationCode}=req.body
+    const user = await Users.findOne({email});
+
+    if (!user) throw new Error("no user");
+  
+     
+      if (verificationCode === user.verificationCode) {
+        user.verificationCode = "";
+        user.isAccountVerified = true;
+
+        await user.save();
+
+        res.json({
+          user: user,
+          message: "Your verify Code  successfully.",
+        });
+      } else {
+        throw new Error("Code is not valid");
+      }
+    } 
+
+);
+
+

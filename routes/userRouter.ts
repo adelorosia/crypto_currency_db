@@ -14,6 +14,9 @@ import {
   unFollowUser,
   deleteAccount,
   examScoreRegistration,
+  confirmEmail,
+  changePasswordWithotLogin,
+  confirmVerificationCode,
 } from "../controllers/userController";
 import { verifyToken } from "../middlewares/token/verifyToken";
 import { refreshToken } from "../controllers/refreshToken";
@@ -60,5 +63,12 @@ router.put("/api/v1/users/change_password", verifyToken, changePassword);
 router.post("/api/v1/users/follow", verifyToken, followUser);
 router.post("/api/v1/users/unfollow", verifyToken, unFollowUser);
 router.put("/api/v1/users/examScoreRegistration",verifyToken, examScoreRegistration);
+
+
+
+//Forget Password
+router.post("/api/v1/users/confirmEmail", confirmEmail);
+router.post("/api/v1/users/confirmVerificationCode", confirmVerificationCode);
+router.put("/api/v1/users/changePasswordWithotLogin", changePasswordWithotLogin);
 
 export default router;
