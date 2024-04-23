@@ -94,8 +94,8 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      // secure: true,
-      // sameSite: "lax",
+      secure: true,
+      sameSite: "lax",
     });
 
     const decode = jwtDecode<IUser>(accessToken);
@@ -205,16 +205,14 @@ export const profilePhotoUser = asyncHandler(
 
 export const accessTokenExpired = asyncHandler(
   async (req: Request, res: Response) => {
-    try {
+    
       const token = req.cookies.accessToken;
       if (!token) throw new Error("user ist nicht mehr loggin");
 
       const user = await Users.findOne({ access_token: token });
       res.json({ user: user, message: "user is loggin" });
-    } catch (error) {
-      res.json(error);
-    }
-  }
+    } 
+
 );
 
 // Edit User Info
