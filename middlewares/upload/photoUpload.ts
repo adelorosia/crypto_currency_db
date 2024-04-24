@@ -7,6 +7,15 @@ const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req: Request, file: any, cb: Function) => {
   if (file.mimetype.startsWith("image")) {
+    file.mimetype.startsWith("image/jpeg") ||
+    file.mimetype.startsWith("image/png") ||
+    file.mimetype.startsWith("image/jpg") ||
+    file.mimetype.startsWith("image/avif") ||
+    file.mimetype.startsWith("image/heic") ||
+    file.mimetype.startsWith("image/gif") ||
+    file.mimetype.startsWith("image/bmp") ||
+    file.mimetype.startsWith("image/webp") ||
+    file.mimetype.startsWith("image/tiff")
     cb(null, true);
   } else {
     cb(
