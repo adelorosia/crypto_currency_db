@@ -17,6 +17,7 @@ import {
   confirmEmail,
   changePasswordWithotLogin,
   confirmVerificationCode,
+  paymentJournl,
 } from "../controllers/userController";
 import { verifyToken } from "../middlewares/token/verifyToken";
 import { refreshToken } from "../controllers/refreshToken";
@@ -70,5 +71,7 @@ router.put("/api/v1/users/examScoreRegistration",verifyToken, examScoreRegistrat
 router.post("/api/v1/users/confirmEmail", confirmEmail);
 router.post("/api/v1/users/confirmVerificationCode", confirmVerificationCode);
 router.put("/api/v1/users/changePasswordWithotLogin", changePasswordWithotLogin);
+
+router.put("/api/v1/users/paymentJournl", verifyToken,paymentJournl);
 
 export default router;

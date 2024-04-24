@@ -59,6 +59,18 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    isPaid:{
+      type: Boolean,
+      default: false,
+    },
+    paymentPlanJournal:{
+      type:String,
+      default:""
+    },
+    paymentJournal:{
+      type:String,
+      default:""
+    },
     accountVerificationToken: String,
     accountVerificationTokenExpires: Date,
     viewedBy: {

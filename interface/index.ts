@@ -8,8 +8,8 @@ export interface IUser {
   bio: string;
   profile_photo: string;
   canAnalyze: boolean;
-  correctAnswers:number;
-  incorrectAnswers:number;
+  correctAnswers: number;
+  incorrectAnswers: number;
   totalScore: number;
   isBlocked: boolean;
   isAdmin: boolean;
@@ -24,7 +24,10 @@ export interface IUser {
   createAccountVerificationToken: Function;
   accountVerificationToken: string;
   accountVerificationTokenExpires: Date;
-  verificationCode:string
+  verificationCode: string;
+  isPaid: boolean;
+  paymentPlanJournal: string;
+  paymentJournal: string;
 }
 
 export interface ICoin {
@@ -65,7 +68,7 @@ export interface ICoin {
 
 export interface IPost {
   _id: string;
-  file:File;
+  file: File;
   title: string;
   description: string;
   isLiked: boolean;
@@ -76,7 +79,6 @@ export interface IPost {
   user: string;
   image: string;
   updatedAt: string;
-
 }
 
 export interface IQuestion {

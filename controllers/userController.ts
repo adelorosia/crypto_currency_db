@@ -94,8 +94,8 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
-      secure: true,
-      sameSite: "lax",
+      // secure: true,
+      // sameSite: "lax",
     });
 
     const decode = jwtDecode<IUser>(accessToken);
@@ -205,15 +205,13 @@ export const profilePhotoUser = asyncHandler(
 
 export const accessTokenExpired = asyncHandler(
   async (req: Request, res: Response) => {
-    
-      const token = req.cookies.accessToken;
-      if (!token) throw new Error("user ist nicht mehr loggin");
+    const token = req.cookies.accessToken;
+    if (!token) throw new Error("user ist nicht mehr loggin");
 
-      const user = await Users.findOne({ access_token: token });
-      if(!user) throw new Error("user ist nicht mehr loggin");
-      res.json({ user: user, message: "user is loggin" });
-    } 
-
+    const user = await Users.findOne({ access_token: token });
+    if (!user) throw new Error("user ist nicht mehr loggin");
+    res.json({ user: user, message: "user is loggin" });
+  }
 );
 
 // Edit User Info
@@ -399,14 +397,17 @@ export const confirmEmail = asyncHandler(
 export const changePasswordWithotLogin = asyncHandler(
   async (req: Request, res: Response) => {
     const { email, newPassword, confirmPassword } = req.body;
-    const user = await Users.findOne({email});
+    const user = await Users.findOne({ email });
     if (user) {
       if (newPassword !== confirmPassword) {
         throw new Error("Password and Confirm Password do not match.");
       }
       user.password = newPassword;
       await user.save();
-      res.json({ message: "Your password has been successfully changed.",user:user });
+      res.json({
+        message: "Your password has been successfully changed.",
+        user: user,
+      });
     } else {
       throw new Error("user Not Found");
     }
@@ -415,27 +416,38 @@ export const changePasswordWithotLogin = asyncHandler(
 
 export const confirmVerificationCode = asyncHandler(
   async (req: Request, res: Response) => {
-   const {email,verificationCode}=req.body
-    const user = await Users.findOne({email});
+    const { email, verificationCode } = req.body;
+    const user = await Users.findOne({ email });
 
     if (!user) throw new Error("no user");
-  
-     
-      if (verificationCode === user.verificationCode) {
-        user.verificationCode = "";
-        user.isAccountVerified = true;
 
-        await user.save();
+    if (verificationCode === user.verificationCode) {
+      user.verificationCode = "";
+      user.isAccountVerified = true;
 
-        res.json({
-          user: user,
-          message: "Your verify Code  successfully.",
-        });
-      } else {
-        throw new Error("Code is not valid");
-      }
-    } 
+      await user.save();
 
+      res.json({
+        user: user,
+        message: "Your verify Code  successfully.",
+      });
+    } else {
+      throw new Error("Code is not valid");
+    }
+  }
 );
 
-
+export const paymentJournl = asyncHandler(
+  async (req: CustomRequest, res: Response) => {
+    const loginUserId = req.userId;
+    const { paymentPlanJournal, paymentJournal } = req.body;
+    const user = await Users.findById(loginUserId);
+    if (!user) throw new Error("no User");
+    console.log(req.body)
+    user.paymentPlanJournal = paymentPlanJournal;
+    user.paymentJournal = paymentJournal;
+    user.isPaid = true;
+    await user.save();
+    res.json({ _id: user._id, message: "payment Success", user });
+  }
+);
