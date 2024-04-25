@@ -69,7 +69,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
       },
       process.env.ACCESS_TOKEN_SECRET as string,
       {
-        expiresIn: "1d",
+        expiresIn: "30d",
       }
     );
     const refreshToken = jwt.sign(
@@ -93,7 +93,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
       secure: true,
       sameSite: "lax",
     });
@@ -443,7 +443,7 @@ export const paymentJournl = asyncHandler(
     const { paymentPlanJournal, paymentJournal } = req.body;
     const user = await Users.findById(loginUserId);
     if (!user) throw new Error("no User");
-    console.log(req.body)
+    console.log(req.body);
     user.paymentPlanJournal = paymentPlanJournal;
     user.paymentJournal = paymentJournal;
     user.isPaid = true;
