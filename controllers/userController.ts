@@ -448,19 +448,17 @@ export const paymentJournl = asyncHandler(
     user.isPaid = true;
     await user.save();
     const { _id: userId } = user;
-    const expired=Number(paymentPlanJournal)*30
+  
     const journalToken = jwt.sign(
       {
-        userId,
+        userId
       },
       process.env.JOURNAL_TOKEN_SECRET as string,
       {
         expiresIn: "30d",
       }
     );
-    console.log("journalToken: ",journalToken)
     res.cookie("journalToken", journalToken, {
-    
       httpOnly: true,
       maxAge:  30 * 24 * 60 * 60 * 1000,
       secure: true,
