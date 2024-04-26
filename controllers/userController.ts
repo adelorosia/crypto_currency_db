@@ -443,11 +443,29 @@ export const paymentJournl = asyncHandler(
     const { paymentPlanJournal, paymentJournal } = req.body;
     const user = await Users.findById(loginUserId);
     if (!user) throw new Error("no User");
-    console.log(req.body);
     user.paymentPlanJournal = paymentPlanJournal;
     user.paymentJournal = paymentJournal;
     user.isPaid = true;
     await user.save();
+    const { _id: userId } = user;
+    const expired=Number(paymentPlanJournal)*30
+    const journalToken = jwt.sign(
+      {
+        userId,
+      },
+      process.env.JOURNAL_TOKEN_SECRET as string,
+      {
+        expiresIn: "30d",
+      }
+    );
+    console.log("journalToken: ",journalToken)
+    res.cookie("journalToken", journalToken, {
+    
+      httpOnly: true,
+      maxAge:  30 * 24 * 60 * 60 * 1000,
+      secure: true,
+      sameSite: "lax",
+    });
     res.json({ _id: user._id, message: "payment Success", user });
   }
 );
