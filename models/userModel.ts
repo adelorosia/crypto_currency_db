@@ -65,11 +65,12 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     paymentPlanJournal:{
       type:String,
-      default:""
     },
     paymentJournal:{
       type:String,
-      default:""
+    },
+    journal_token:{
+      type:String,
     },
     accountVerificationToken: String,
     accountVerificationTokenExpires: Date,

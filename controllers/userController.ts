@@ -442,28 +442,33 @@ export const paymentJournl = asyncHandler(
     const loginUserId = req.userId;
     const { paymentPlanJournal, paymentJournal } = req.body;
     const user = await Users.findById(loginUserId);
-    if (!user) throw new Error("no User");
-    user.paymentPlanJournal = paymentPlanJournal;
-    user.paymentJournal = paymentJournal;
-    user.isPaid = true;
-    await user.save();
-    const { _id: userId } = user;
-  
-    const journalToken = jwt.sign(
-      {
-        userId
-      },
-      process.env.JOURNAL_TOKEN_SECRET as string,
-      {
-        expiresIn: "30d",
-      }
-    );
-    res.cookie("journalToken", journalToken, {
-      httpOnly: true,
-      maxAge:  30 * 24 * 60 * 60 * 1000,
-      secure: true,
-      sameSite: "lax",
-    });
-    res.json({ _id: user._id, message: "payment Success", user });
+    if (user) {
+      user.paymentPlanJournal = paymentPlanJournal;
+      user.paymentJournal = paymentJournal;
+      user.isPaid = true;
+
+      const { _id: userId } = user;
+
+      const journalToken = jwt.sign(
+        {
+          userId,
+        },
+        process.env.JOURNAL_TOKEN_SECRET as string,
+        {
+          expiresIn: "30d",
+        }
+      );
+      user.journal_token = journalToken;
+      await user.save();
+      res.cookie("journalToken", journalToken, {
+        httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        secure: true,
+        sameSite: "lax",
+      });
+      res.json({ _id: user._id, message: "payment Success", user });
+    } else {
+      throw new Error("no User");
+    }
   }
 );

@@ -28,6 +28,7 @@ export interface IUser {
   isPaid: boolean;
   paymentPlanJournal: string;
   paymentJournal: string;
+  journal_token:string
 }
 
 export interface ICoin {
