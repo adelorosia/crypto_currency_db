@@ -7,7 +7,7 @@ import { IPost } from "../interface";
 import { cloudinaryUploadImage } from "../utils/cloudinary";
 import fs from "fs";
 import Users from "../models/userModel";
-import { loginUser } from "./userController";
+
 
 interface CustomRequest extends Request {
   userId?: IPost;

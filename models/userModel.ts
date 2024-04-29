@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
 import { IUser } from "../interface";
 
 const userSchema = new mongoose.Schema<IUser>(
@@ -63,11 +62,17 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Boolean,
       default: false,
     },
-    paymentPlanJournal:{
+    planJournal:{
+      type:Number,
+    },
+    priceJournal:{
       type:String,
     },
-    paymentJournal:{
-      type:String,
+    expJournal:{
+      type:Date,
+    },
+    iatJournal:{
+      type:Date,
     },
     journal_token:{
       type:String,

@@ -7,6 +7,7 @@ import { Request, Response } from "express";
 import { sendVerificationLinkToEmail } from "./email/sendEmail";
 import { cloudinaryUploadImage } from "../utils/cloudinary";
 import fs from "fs";
+import { addMonths } from "date-fns";
 
 interface CustomRequest extends Request {
   userId?: IUser;
@@ -393,7 +394,7 @@ export const confirmEmail = asyncHandler(
   }
 );
 
-//CHANGE PASSWORD WENN USER IST LOGIN
+//CHANGE PASSWORD WENN USER IST Nicht LOGIN
 export const changePasswordWithotLogin = asyncHandler(
   async (req: Request, res: Response) => {
     const { email, newPassword, confirmPassword } = req.body;
@@ -440,33 +441,56 @@ export const confirmVerificationCode = asyncHandler(
 export const paymentJournl = asyncHandler(
   async (req: CustomRequest, res: Response) => {
     const loginUserId = req.userId;
-    const { paymentPlanJournal, paymentJournal } = req.body;
+    const { planJournal, priceJournal } = req.body;
     const user = await Users.findById(loginUserId);
     if (user) {
-      user.paymentPlanJournal = paymentPlanJournal;
-      user.paymentJournal = paymentJournal;
+      const currentDate = new Date();
+      user.planJournal = planJournal;
+      user.priceJournal = priceJournal;
+
+      user.iatJournal = currentDate;
+      user.expJournal = addMonths(currentDate, Number(planJournal));
       user.isPaid = true;
-
-      const { _id: userId } = user;
-
-      const journalToken = jwt.sign(
-        {
-          userId,
-        },
-        process.env.JOURNAL_TOKEN_SECRET as string,
-        {
-          expiresIn: "30d",
-        }
-      );
-      user.journal_token = journalToken;
       await user.save();
-      res.cookie("journalToken", journalToken, {
-        httpOnly: true,
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        secure: true,
-        sameSite: "lax",
-      });
       res.json({ _id: user._id, message: "payment Success", user });
+    } else {
+      throw new Error("no User");
+    }
+  }
+);
+
+export const checkAndUpdateExpDateJournal = asyncHandler(
+  async (req: CustomRequest, res: Response) => {
+    const loginUserId = req.userId;
+    const user = await Users.findById(loginUserId);
+    if (user) {
+      const currentDate = new Date();
+      console.log(currentDate);
+      console.log(user.expJournal);
+      if (currentDate > user.expJournal) {
+        user.iatJournal = undefined;
+        user.priceJournal = undefined;
+        user.planJournal = undefined;
+        user.isPaid = false;
+        await user.save();
+  
+        res.json({
+          _id: user._id,
+          user,
+          status:400,
+          message: "Expired fields checked and updated successfully",
+        });
+      } else {
+     
+        const difference = currentDate.getTime() - user.expJournal.getTime();
+        const daysDifference = Math.ceil(difference / (1000 * 60 * 60 * 24));
+        res.json({
+          _id: user._id,
+          user,
+          status:200,
+          message: `${daysDifference} days left`,
+        });
+      }
     } else {
       throw new Error("no User");
     }

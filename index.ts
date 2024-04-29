@@ -11,6 +11,7 @@ import newsRouter from "./routes/newsRouter";
 import analyzeRouter from "./routes/analyzeRouter";
 import commentRouter from "./routes/commentRouter";
 import quizRouter from "./routes/quizRouter";
+import journalRouter from "./routes/journalRouter";
 
 dotenv.config();
 dbConnect();
@@ -18,7 +19,7 @@ dbConnect();
 const app = express();
 
 app.use(express.json());
-app.use(cors({ credentials: true, origin: "https://orosia.online" }));
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(cookieParser());
 
 app.use(userRouter);
@@ -28,6 +29,7 @@ app.use(newsRouter);
 app.use(analyzeRouter);
 app.use(commentRouter);
 app.use(quizRouter);
+app.use(journalRouter);
 
 app.use(notFound);
 app.use(errorHandler);

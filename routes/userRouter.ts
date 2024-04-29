@@ -18,6 +18,7 @@ import {
   changePasswordWithotLogin,
   confirmVerificationCode,
   paymentJournl,
+  checkAndUpdateExpDateJournal,
 } from "../controllers/userController";
 import { verifyToken } from "../middlewares/token/verifyToken";
 import { refreshToken } from "../controllers/refreshToken";
@@ -27,6 +28,10 @@ import {
 } from "../middlewares/upload/photoUpload";
 
 const router = express.Router();
+
+//paypal
+router.put("/api/v1/users/paymentJournl", verifyToken,paymentJournl);
+router.put("/api/v1/users/checkAndUpdateExpDateJournal", verifyToken,checkAndUpdateExpDateJournal);
 
 // NEW TOKEN, CHECK TOKEN
 router.get("/api/v1/token", refreshToken);
@@ -72,6 +77,6 @@ router.post("/api/v1/users/confirmEmail", confirmEmail);
 router.post("/api/v1/users/confirmVerificationCode", confirmVerificationCode);
 router.put("/api/v1/users/changePasswordWithotLogin", changePasswordWithotLogin);
 
-router.put("/api/v1/users/paymentJournl", verifyToken,paymentJournl);
+
 
 export default router;

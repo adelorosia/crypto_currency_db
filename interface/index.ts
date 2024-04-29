@@ -26,9 +26,11 @@ export interface IUser {
   accountVerificationTokenExpires: Date;
   verificationCode: string;
   isPaid: boolean;
-  paymentPlanJournal: string;
-  paymentJournal: string;
-  journal_token:string
+  planJournal: number;
+  priceJournal: string;
+  journal_token: string;
+  expJournal: Date;
+  iatJournal: Date;
 }
 
 export interface ICoin {
@@ -89,4 +91,23 @@ export interface IQuestion {
   choices: string;
   correct_answers: string;
   score: number;
+}
+
+export interface IJournal {
+  _id: string;
+  user: string;
+  baseCoin: string;
+  quoteCoin: string;
+  tradeType: string;
+  startTime: string;
+  endTime: string;
+  startDate: string;
+  endDate: string;
+  price: number;
+  takeProfit: number;
+  stopLoss: number;
+  riskReward: number;
+  reasonsforEntry: string;
+  isClose: boolean;
+  tradeSummary: string;
 }
