@@ -58,6 +58,15 @@ const journalSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    results: {
+      type: Boolean,
+    },
+    profit: {
+      type: Number,
+    },
+    loss: {
+      type: Number,
+    },
     tradeSummary: {
       type: String,
     },
