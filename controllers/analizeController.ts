@@ -98,6 +98,7 @@ export const deleteAnalyze = asyncHandler(
     blockUser(userData);
     verifyUser(userData);
     analysatorUser(userData)
+    console.log(targetUser)
     if (targetUser === userId || userData.isAdmin) {
       const { postIdPublic } = req.body;
       try {

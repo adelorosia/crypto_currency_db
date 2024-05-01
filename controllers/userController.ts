@@ -463,10 +463,8 @@ export const checkAndUpdateExpDateJournal = asyncHandler(
   async (req: CustomRequest, res: Response) => {
     const loginUserId = req.userId;
     const user = await Users.findById(loginUserId);
-    if (user) {
+    if (user && user.expJournal) {
       const currentDate = new Date();
-      console.log(currentDate);
-      console.log(user.expJournal);
       if (currentDate > user.expJournal) {
         user.iatJournal = undefined;
         user.priceJournal = undefined;
